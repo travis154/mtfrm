@@ -9,11 +9,14 @@
     "express": "3.2.6",
     "jade": "*",
     "stylus": "~0.41.3",
-    "underscore":"*",
-    "connect-mongo":"*",
-    "async":"*",
-    "jade-browser":"*",
-    "moment":"*",
-    "underscore.string":"*"
+    "underscore": "*",
+    "connect-mongo": "~0.4.0",
+    "async": "*",
+    "jade-browser": "*",
+    "moment": "*",
+    "underscore.string": "*",
+    "passport-local": "~0.1.6",
+    "passport": "~0.1.18",
+    "mongoose": "~3.8.3"
   }
 }
