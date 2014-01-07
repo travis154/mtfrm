@@ -7,7 +7,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
-
+var async = require('async');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -16,11 +16,12 @@ var MongoStore = require('connect-mongo')(express);
 var conf = require('./conf');
 
 var sessionStore = new MongoStore({db:conf.db});
-var UserSchema = require('./lib/Schema').User;
+var Schema = require('./lib/Schema');
 
 //models
 var db = mongoose.connect("mongodb://127.0.0.1/" + conf.db);
-var User = db.model('user', UserSchema);
+var User = db.model('user', Schema.User);
+var Member = db.model('member', Schema.Member);
 
 //create admin user if not exist
 User.createIfNotExists({username:'test', password:'test'});
@@ -83,10 +84,36 @@ function authenticate(req,res,next){
 }
 
 app.get('/', authenticate, function(req,res){
-	res.render('index');
+	async.auto({
+		count: function(fn){
+			Member.count(fn);
+		},
+		latest_mem:function(fn){
+			Member
+			.findOne({},{business_name:1})
+			.sort({_id:-1})
+			.exec(function(err, doc){
+				fn(err, doc.business_name);
+			});
+		}
+	}, function(err, data){
+		if(err) throw err;
+		res.render('index',data);
+	});
 });
 app.get('/members/register', authenticate, function(req,res){
 	res.render('register');
+});
+app.post('/members/register', authenticate, function(req,res){
+	var data = req.body;
+	data.ip = req.ip;
+	data.user = req.user;
+	data.time = new Date()
+	var mem = new Member(data);
+	mem.save(function(err, member){
+		if(err) throw err;
+		res.json(member);
+	});
 });
 app.get('/login', function(req,res){
 	res.render('login');

@@ -11,7 +11,7 @@
     "stylus": "~0.41.3",
     "underscore": "*",
     "connect-mongo": "~0.4.0",
-    "async": "*",
+    "async": "~0.2.9",
     "jade-browser": "*",
     "moment": "*",
     "underscore.string": "*",

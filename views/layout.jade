@@ -9,11 +9,16 @@ html
 		script(src='/js/jquery-2.0.3.min.js')
 		script(src='/js/bootstrap.min.js')
 		script(src='/js/parsley.js')
+		script(src="https://raw.github.com/Marak/Faker.js/master/MinFaker.js")
+		script(src='/js/web.js')
 		style .navbar{border-radius:0} .btn-danger.active{background-color: #666;}
 	body
 			nav.navbar.navbar-inverse(role="navigation")
 				section.container
 					ul.nav.navbar-nav
+						li
+							a(href='/')
+								span.glyphicon.glyphicon-home
 						li
 							a(href='/members/register') Register New Member
 						li
@@ -22,7 +27,7 @@ html
 							a(href='') Bulk Message
 					ul.nav.navbar-nav.pull-right
 						li
-							a(href='') Change Password
+							a(href='/user/password') Change Password
 						li
 							a(href='/logout') Logout
 			section.container

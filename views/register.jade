@@ -4,7 +4,7 @@ block content
 	h1 New Member Registration
 	section.row
 		section.col-md-6
-			form.form-horizontal(role='form',  parsley-validate)
+			form.form-horizontal(role='form',  parsley-validate)#new-member-form
 				h2 Business information
 				hr
 				section.form-group
@@ -38,32 +38,32 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Type Of Business
 					section.col-sm-9
-						section.btn-group(data-toggle='buttons')
-							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+						section.btn-group(data-toggle='buttons')#business_type
+							label.btn.btn-danger.active
+								input(type="radio", name="business_type", value="Sole Trader")
 								| Sole Trader
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="business_type", value="Local Investment")
 								| Local Investment
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="business_type", value="Company")
 								| Company
 						
 				section.form-group
 					label.col-sm-3.control-label Nature Of Business
 					section.col-sm-9
-						section.btn-group(data-toggle='buttons')
-							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+						section.btn-group(data-toggle='buttons')#business_nature
+							label.btn.btn-danger.active
+								input(type="radio", name="business_nature")
 								| Wholesale
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="business_nature")
 								| Retail
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="business_nature")
 								| Exporter
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="business_nature")
 								| Importer
 						
 						
@@ -80,12 +80,12 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Sex
 					section.col-sm-9
-						section.btn-group(data-toggle='buttons')
-							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+						section.btn-group(data-toggle='buttons')#personal_sex
+							label.btn.btn-danger.active
+								input(type="radio", name="personal_sex")
 								| Male
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="personal_sex")
 								| Female
 				section.form-group
 					label.col-sm-3.control-label Mobile no
@@ -108,15 +108,15 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Type
 					section.col-sm-9
-						section.btn-group(data-toggle='buttons')
-							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+						section.btn-group(data-toggle='buttons')#membership
+							label.btn.btn-danger.active
+								input(type="radio", name="membership")
 								| Bronze
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="membership")
 								| Silver
 							label.btn.btn-danger
-								input(type="radio", name="business_type", id="sole_trader")
+								input(type="radio", name="membership")
 								| Gold
 				section.form-group
 					section.col-sm-offset-3.col-sm-9

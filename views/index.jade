@@ -1,5 +1,47 @@
-extends layout
+extends layouthome
 
 block content
-	h1 Hello
-			
+	br
+	br
+	section(style='text-align:center')
+		h1(style='font-weight:lighter;font-size:60px')
+			img(src="/images/logo.png")
+			|  Maldives Trade Union
+		h1(style='color:green') Members Portal
+	hr
+	section.row
+		section.col-md-8
+			section.row
+				a(href='/members/register').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-user
+					h4 Add a member
+				a(href='/members').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-th-list
+					h4 Show members
+				a(href='/sms').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-pencil
+					h4 Send SMS
+				a(href='/user/password').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-floppy-open
+					h4 Change Password
+				a(href='/user/add').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-plus
+					h4 Add User
+				a(href='/logout').col-md-3.home-task
+					section
+						span.glyphicon.glyphicon-minus-sign
+					h4 Logout
+		section.col-md-4
+			section.jumbotron
+				h4 Total Registered Members
+				h3=count
+				hr
+				h4 Latest Member
+				h3=latest_mem
+				hr
+
