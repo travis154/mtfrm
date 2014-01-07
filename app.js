@@ -85,7 +85,9 @@ function authenticate(req,res,next){
 app.get('/', authenticate, function(req,res){
 	res.render('index');
 });
-
+app.get('/members/register', authenticate, function(req,res){
+	res.render('register');
+});
 app.get('/login', function(req,res){
 	res.render('login');
 });

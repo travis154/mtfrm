@@ -8,7 +8,22 @@ html
 		link(rel='stylesheet', href='/css/app.css')
 		script(src='/js/jquery-2.0.3.min.js')
 		script(src='/js/bootstrap.min.js')
+		script(src='/js/parsley.js')
+		style .navbar{border-radius:0} .btn-danger.active{background-color: #666;}
 	body
-		section.container
-			h1 hello
-			a(href='/logout') Logout
+			nav.navbar.navbar-inverse(role="navigation")
+				section.container
+					ul.nav.navbar-nav
+						li
+							a(href='/members/register') Register New Member
+						li
+							a(href='/members') Members
+						li
+							a(href='') Bulk Message
+					ul.nav.navbar-nav.pull-right
+						li
+							a(href='') Change Password
+						li
+							a(href='/logout') Logout
+			section.container
+				block content
