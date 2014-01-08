@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-
+var _ = require('underscore');
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var async = require('async');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var moment = require('moment');
 var MongoStore = require('connect-mongo')(express);
   
 var conf = require('./conf');
@@ -24,7 +24,7 @@ var User = db.model('user', Schema.User);
 var Member = db.model('member', Schema.Member);
 
 //create admin user if not exist
-User.createIfNotExists({username:'test', password:'test'});
+User.createIfNotExists({username:'test', password:'test', name:'Test User', type:'supervisor'});
 
 
 passport.use(new LocalStrategy({
@@ -49,7 +49,10 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  done(null, id);
+	User.findOne({username:id}, function(err, user){
+		if(!err) done(null, user);
+		else done(err, null)  
+	})
 });
 
 var app = express();
@@ -98,7 +101,21 @@ app.get('/', authenticate, function(req,res){
 		}
 	}, function(err, data){
 		if(err) throw err;
+		data.usertype = req.user.type.toLowerCase();
 		res.render('index',data);
+	});
+});
+app.get('/members', authenticate, function(req,res){
+	Member
+	.find()
+	.sort({_id:-1})
+	.lean()
+	.exec(function(err, members){
+		members = _.map(members,function(e){
+			e.time = moment(e.time).format("Do MMM YY");
+			return e;
+		});
+		res.render('members', {members:members});
 	});
 });
 app.get('/members/register', authenticate, function(req,res){
@@ -115,8 +132,77 @@ app.post('/members/register', authenticate, function(req,res){
 		res.json(member);
 	});
 });
+app.get('/members/:id', authenticate, function(req,res){
+	Member
+	.findOne({_id:req.params.id})
+	.lean()
+	.exec(function(err, member){
+		if(err) throw err;
+		if(!member){
+			return res.redirect('/members');
+		}
+		res.render('register', {member:member});
+	});
+});
+app.del('/members/:id', authenticate, function(req,res){
+	Member
+	.remove({_id:req.params.id},function(err){
+		res.json({success:1});
+	});
+});
+app.post('/members/:id', authenticate, function(req,res){
+	var id = req.params.id;
+	var data = req.body;
+	Member.update({_id:id}, data, function(err, member){
+		if(err) throw err;
+		res.json(member);
+	});
+});
+
 app.get('/login', function(req,res){
 	res.render('login');
+});
+app.get('/sms', authenticate, function(req,res){
+	res.render('sms');
+});
+app.get('/user/password', authenticate, function(req,res){
+	res.render('password');
+});
+app.post('/user/password', authenticate, function(req,res){
+	var pass = req.body.password_new;
+	User.changePassword({username:req.user, password:pass}, function(err, change){
+		res.redirect('/logout');
+	});
+});
+app.get('/users', authenticate, function(req,res){
+	User
+	.find()
+	.sort({_id:-1})
+	.lean()
+	.exec(function(err, users){
+		res.render('users', {users:users});
+	});
+});
+app.del('/user/:id', authenticate, function(req,res){
+	User
+	.remove({_id:req.params.id},function(err){
+		res.json({success:1});
+	});
+});
+app.get('/user/add', authenticate, function(req,res){
+	res.render('user-add');
+});
+app.post('/user/add', authenticate, function(req,res){
+	var data = req.body;
+	data.password = "welcome";
+	data.ip = req.ip;
+	data.user = req.user;
+	data.time = new Date()
+	var user = new User(data);
+	user.save(function(err, user){
+		if(err) throw err;
+		res.json(user);
+	});
 });
 
 app.post(

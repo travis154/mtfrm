@@ -1,10 +1,10 @@
 extends layout
 
 block content
-	h1 New Member Registration
+	h1=member?"Update information of " + member.business_name : "New Member Registration"
 	section.row
 		section.col-md-6
-			form.form-horizontal(role='form',  parsley-validate)#new-member-form
+			form.form-horizontal(role='form',  parsley-validate, data-data=encodeURIComponent(JSON.stringify(member)))#new-member-form
 				h2 Business information
 				hr
 				section.form-group
@@ -22,11 +22,11 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Phone no
 					section.col-sm-9
-						input.form-control(type='text', placeholder='Phone no', required)#business_phone
+						input.form-control(type='number', placeholder='Phone no', required, parsley-minlength="7",parsley-maxlength="7")#business_phone
 				section.form-group
 					label.col-sm-3.control-label Fax
 					section.col-sm-9
-						input.form-control(type='text', placeholder='Fax', required)#business_fax
+						input.form-control(type='number', placeholder='Fax', required, parsley-minlength="7",parsley-maxlength="7")#business_fax
 				section.form-group
 					label.col-sm-3.control-label Email
 					section.col-sm-9
@@ -34,7 +34,7 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Website
 					section.col-sm-9
-						input.form-control(type='text', placeholder='Website', required)#business_website
+						input.form-control(type='text', placeholder='Website', required, parsley-type="url")#business_website
 				section.form-group
 					label.col-sm-3.control-label Type Of Business
 					section.col-sm-9
@@ -90,7 +90,7 @@ block content
 				section.form-group
 					label.col-sm-3.control-label Mobile no
 					section.col-sm-9
-						input.form-control(type='text', placeholder='Phone no', required)#personal_mobile
+						input.form-control(type='number', placeholder='Phone no', required, parsley-minlength="7",parsley-maxlength="7")#personal_mobile
 				section.form-group
 					label.col-sm-3.control-label Permanent Address
 					section.col-sm-9
@@ -118,7 +118,14 @@ block content
 							label.btn.btn-danger
 								input(type="radio", name="membership")
 								| Gold
+				-if(member)
+					h2 Actions
+					hr									
+					section.form-group
+						label.col-sm-3.control-label &nbsp;
+						section.col-sm-9
+							button(type='button', data-id=member._id.toString()).btn.btn-default.remove-member Remove this member
 				section.form-group
 					section.col-sm-offset-3.col-sm-9
-						button.btn.btn-info.btn-block(type='submit') Register
+						button.btn.btn-info.btn-block(type='submit')=member?"Update" : "Register"
 			

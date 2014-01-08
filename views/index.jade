@@ -20,18 +20,23 @@ block content
 					section
 						span.glyphicon.glyphicon-th-list
 					h4 Show members
-				a(href='/sms').col-md-3.home-task
-					section
-						span.glyphicon.glyphicon-pencil
-					h4 Send SMS
 				a(href='/user/password').col-md-3.home-task
 					section
 						span.glyphicon.glyphicon-floppy-open
 					h4 Change Password
-				a(href='/user/add').col-md-3.home-task
-					section
-						span.glyphicon.glyphicon-plus
-					h4 Add User
+				-if(usertype == "supervisor")
+					a(href='/sms').col-md-3.home-task
+						section
+							span.glyphicon.glyphicon-pencil
+						h4 Send SMS
+					a(href='/users').col-md-3.home-task
+						section
+							span.glyphicon.glyphicon-th-large
+						h4 Users
+					a(href='/user/add').col-md-3.home-task
+						section
+							span.glyphicon.glyphicon-plus
+						h4 Add User
 				a(href='/logout').col-md-3.home-task
 					section
 						span.glyphicon.glyphicon-minus-sign
