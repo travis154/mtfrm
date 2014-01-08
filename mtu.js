@@ -95,7 +95,8 @@ app.get('/', authenticate, function(req,res){
 			.findOne({},{business_name:1})
 			.sort({_id:-1})
 			.exec(function(err, doc){
-				fn(err, doc.business_name);
+				var name = doc ? doc.business_name : null;
+				fn(err, name);
 			});
 		}
 	}, function(err, data){
