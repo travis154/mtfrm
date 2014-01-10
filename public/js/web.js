@@ -26,7 +26,7 @@ $(function(){
 			$("#membership label[data-text='"+data['membership']+"']").addClass("active");	
 		}
 	}
-	$("form input").each(function(){
+	$("form input, form textarea").each(function(){
 		var self = $(this);
 		self.attr("name", self.attr("id"));
 		return;
@@ -64,6 +64,28 @@ $(function(){
 					return alert("Member update");
 				}
 				alert("Member added");
+				$("form input").each(function(){
+					$(this).val('');
+				})
+			})
+		}
+	});
+	$("#new-sms-form").on('submit', function(e){
+		e.preventDefault();
+		var form = $(this);
+		if(form.parsley('isValid')){
+			var data = form.serializeArray();
+			var obj = {};
+			data.forEach(function(e){
+				obj[e.name] = e.value;
+			});
+			obj.recipient_type = $("#recipient_type label.active").text();
+			var url = "/sms";			
+			$.post(url, obj, function(res){
+				if(res.error){
+					return alert(res.error);
+				}
+				alert("Bulk SMS queue started");
 				$("form input").each(function(){
 					$(this).val('');
 				})
@@ -116,4 +138,13 @@ $(function(){
 			});
 		}
 	});
-})
+});
+
+function retrieveBalance(){
+	$.getJSON('/sms/balance', function(res){
+		$("#sms_balance").text(res.balance + " EURO");
+	});
+}
+
+
+

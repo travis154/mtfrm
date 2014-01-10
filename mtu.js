@@ -11,6 +11,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var moment = require('moment');
 var MongoStore = require('connect-mongo')(express);
+var request = require('request');
   
 var conf = require('./conf');
 
@@ -21,6 +22,7 @@ var Schema = require('./lib/Schema');
 var db = mongoose.connect("mongodb://127.0.0.1/" + conf.db);
 var User = db.model('user', Schema.User);
 var Member = db.model('member', Schema.Member);
+var SMS = db.model('sms', Schema.SMS);
 
 //create admin user if not exist
 User.createIfNotExists({username:'test', password:'test', name:'Test User', type:'supervisor'});
@@ -124,7 +126,7 @@ app.get('/members/register', authenticate, function(req,res){
 app.post('/members/register', authenticate, function(req,res){
 	var data = req.body;
 	data.ip = req.ip;
-	data.user = req.user;
+	data.user = req.user.username;
 	data.time = new Date()
 	var mem = new Member(data);
 	mem.save(function(err, member){
@@ -162,9 +164,6 @@ app.post('/members/:id', authenticate, function(req,res){
 app.get('/login', function(req,res){
 	res.render('login');
 });
-app.get('/sms', authenticate, function(req,res){
-	res.render('sms');
-});
 app.get('/user/password', authenticate, function(req,res){
 	res.render('password');
 });
@@ -196,7 +195,7 @@ app.post('/user/add', authenticate, function(req,res){
 	var data = req.body;
 	data.password = "welcome";
 	data.ip = req.ip;
-	data.user = req.user;
+	data.user = req.user.username;
 	data.time = new Date()
 	var user = new User(data);
 	user.save(function(err, user){
@@ -204,7 +203,78 @@ app.post('/user/add', authenticate, function(req,res){
 		res.json(user);
 	});
 });
+app.get('/sms', authenticate, function(req,res){
+	SMS
+	.find()
+	.sort({_id:-1})
+	.exec(function(err, jobs){
+		res.render('sms', {jobs:jobs});
+	});
+});
+app.post('/sms', authenticate, function(req,res){
+	//find recipients based on membership type
+	var recipient_type = req.body.recipient_type;
+	var recipient_type_query = req.body.recipient_type == "Everyone" ? new RegExp('.','g') : req.body.recipient_type.replace("Members", "").trim();
+	Member
+	.find({membership:recipient_type_query},{_id:1, personal_mobile:1})
+	.exec(function(err, recs){
+		if(err) throw err;
+		if(!recs){
+			return res.json({error:'no one to send'});
+		}
+		var data = req.body;
+		data.message = req.body.sms_message;
+		data.ip = req.ip;
+		data.user = req.user.username;
+		data.time = new Date()
+		
+		var sms = new SMS(data);
+		sms.recipients_type = recipient_type
+		sms.recipients = recs;
+		//save dn
+		sms.save(function(err, rec){
+			res.json(rec);
+		});
+		//send sms
+		async.eachLimit(recs, 5, function(item, done){
+			var post = {
+				api_key:conf.nexmo.key,
+				api_secret:conf.nexmo.secret,
+				from:"test",
+				to:"960" + item.personal_mobile,
+				text:data.message
+			}
+			request({
+				url:"https://rest.nexmo.com/sms/json",
+				method:"POST",
+				form:post
+			});		
+		});
+		
+	});
+});
+app.get('/sms/balance', function(req, res){
+	request({
+		url:"https://rest.nexmo.com/account/get-balance/" + conf.nexmo.key + "/" + conf.nexmo.secret,
+		method:"GET",
+		headers:{
+			"Accept":"application/json"
+		}
+	}, function(err, resp, body){
+		try{
+			var body = JSON.parse(body);
+			res.json({
+				balance:body.value
+			});
+		}catch(e){
+			res.json({
+				balance:0
+			});
+			
+		}
+	});
 
+});
 app.post(
 	'/login',
 	passport.authenticate('local', {

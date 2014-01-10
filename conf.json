@@ -1,5 +1,9 @@
 {
 	"db":"fun",
 	"cookie_secret":"naruto meets firefocks",
-	"password_hash":"cookies every 906"
+	"password_hash":"cookies every 906",
+	"nexmo":{
+		"key":"",
+		"secret":""
+	}
 }
