@@ -142,7 +142,7 @@ $(function(){
 
 function retrieveBalance(){
 	$.getJSON('/sms/balance', function(res){
-		$("#sms_balance").text(res.balance + " EURO");
+		$("#sms_balance").text((parseInt(res.balance) * 21) /.20 + " SMS left");
 	});
 }
 
