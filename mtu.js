@@ -240,7 +240,7 @@ app.post('/sms', authenticate, function(req,res){
 			var post = {
 				api_key:conf.nexmo.key,
 				api_secret:conf.nexmo.secret,
-				from:"test",
+				from:"MTU",
 				to:"960" + item.personal_mobile,
 				text:data.message
 			}
