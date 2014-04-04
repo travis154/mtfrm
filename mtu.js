@@ -132,6 +132,18 @@ app.post('/members/register', authenticate, function(req,res){
 	mem.save(function(err, member){
 		if(err) throw err;
 		res.json(member);
+		var post = {
+			api_key:conf.nexmo.key,
+			api_secret:conf.nexmo.secret,
+			from:"MTU",
+			to:"960" + member.personal_mobile,
+			text:"Thank you for registering as a member in Maldives Trade Union."
+		}
+		request({
+			url:"https://rest.nexmo.com/sms/json",
+			method:"POST",
+			form:post
+		});		
 	});
 });
 app.get('/members/:id', authenticate, function(req,res){
