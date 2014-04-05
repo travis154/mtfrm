@@ -137,7 +137,7 @@ app.post('/members/register', authenticate, function(req,res){
 			api_secret:conf.nexmo.secret,
 			from:"MTU",
 			to:"960" + member.personal_mobile,
-			text:"Thank you for registering as a member in Maldives Trade Union."
+			text:"Welcome to Maldives Trade Union. You have officially been registered as a Member of MTU. For futher enquiries please contact our hotline 3011540. Thank you."
 		}
 		request({
 			url:"https://rest.nexmo.com/sms/json",
