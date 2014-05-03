@@ -248,6 +248,7 @@ app.post('/sms', authenticate, function(req,res){
 			res.json(rec);
 		});
 		//send sms
+		recs = _.uniq(recs);
 		async.eachLimit(recs, 1, function(item, done){
 			var post = {
 				api_key:conf.nexmo.key,
