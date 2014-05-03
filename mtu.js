@@ -249,7 +249,7 @@ app.post('/sms', authenticate, function(req,res){
 		});
 		//send sms
 		recs = _.uniq(recs);
-		async.eachLimit(recs, 1, function(item, done){
+		async.eachLimit(recs, 5, function(item, done){
 			var post = {
 				api_key:conf.nexmo.key,
 				api_secret:conf.nexmo.secret,
@@ -261,7 +261,7 @@ app.post('/sms', authenticate, function(req,res){
 				url:"https://rest.nexmo.com/sms/json",
 				method:"POST",
 				form:post
-			}, function(err,res,body){console.log(body);});		
+			}, function(err,res,body){console.log(body); done();});
 		});
 		
 	});
